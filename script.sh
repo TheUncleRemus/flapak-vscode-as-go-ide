@@ -7,7 +7,7 @@ mkdir -p "$HOME"/.golang && cd "$HOME"/.golang/
 # unpack directory
 tar -C . -xzf /home/tcatalano@LUISA.LOC/Scaricati/go1.21.4.linux-amd64.tar.gz
 
-# export the go paths if it doesn't exists
+# export the golang paths if they doesn't exists
 go_root=$(grep -rni "#go-root" $HOME/.bashrc)
 go_path=$(grep -rni "#go-path" $HOME/.bashrc)
 if [ -z "$go_root" ]; then
@@ -25,7 +25,7 @@ fi;
 # reload current bash profile
 source $HOME/.bashrc
 
-# check the go command
+# check the golang command
 go envs
 if [ $? == 0 ] ; then
   echo 'go is installed and configured'
