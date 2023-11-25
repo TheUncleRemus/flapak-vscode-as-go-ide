@@ -1,13 +1,13 @@
 # flapak-vscode-as-go-ide
 
-This repo describe a possible installation of go (golang) useful to interact with it using vscode from flatpak
+This repo describe a possible installation of go (golang) useful to interact with it using vscode installed from flatpak
 
 # the problem
 
 If you have installed the vscode [Visual Studio Code](https://code.visualstudio.com/) using flatpak, after the `go` 
 installation you probably meet this error:
 
-![No goroot path](#./img/vscode-error-no-goroot.png "No root error")
+![No goroot path](./img/vscode-error-no-goroot.png "No root error")
 
 and whatever 'environment set' (GOROOT in this case) you try to do, the error persist!
 
@@ -64,3 +64,9 @@ The solution is to install `go` to no private path (flatpak side), and overrides
 you can find the beloved steps inside the `script.sh`. You can run as-is or c&p approach.
 
 **NOTE**: my preferred installation path is `$HOME/.golang` (`that is != $HOME/go`)
+
+# the result
+
+After to complete this configuration, you can see the `go` compiler message under the 'PROBLEM' tab
+
+![vscode is OK!](./img/vscode-configuration-ok.png)
