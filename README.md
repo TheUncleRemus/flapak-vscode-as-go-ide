@@ -56,8 +56,8 @@ The solution is to install `go` to no private path (flatpak side), and overrides
 - remove aol go installation
 - download tar archive from the `go` site
 - unpack the tar archive to custom (no private) directory
-- edit $HOME/.profile (adding/editing the environment vars)
-- reload the profile
+- edit $HOME/.bashrc (adding/editing the environment vars)
+- reload the $HOME/.bashrc
 - check `go` command (eg: `go env`)
 - edit the file `/var/lib/flatpak/overrides/global` (or run the flatpak command)
 
