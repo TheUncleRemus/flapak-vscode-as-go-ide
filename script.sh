@@ -9,7 +9,10 @@ tar -C . -xzf /home/tcatalano@LUISA.LOC/Scaricati/go1.21.4.linux-amd64.tar.gz
 
 # export the go paths
 echo "export PATH=\"$PATH:$HOME/.golang/go/bin\"" >> $HOME/.profile
-echo "export GOROOT=\"$HOME/.golang/go\""
+echo "export GOROOT=\"$HOME/.golang/go\"" >> $HOME/.profile
+
+# reload current bash profile
+source $HOME/.profile
 
 # check the go command
 go env
