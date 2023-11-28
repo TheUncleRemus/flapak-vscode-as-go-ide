@@ -70,3 +70,17 @@ you can find the beloved steps inside the `script.sh`. You can run as-is or c&p 
 After to complete this configuration, you can see the `go` compiler message under the 'PROBLEM' tab
 
 ![vscode is OK!](./img/vscode-configuration-ok.png)
+
+# howto
+
+How to run this script?
+
+```Shell
+./script {go_version} {arch}
+```
+
+example
+
+```Shell
+./script go1.21.4 linux-amd64
+```
