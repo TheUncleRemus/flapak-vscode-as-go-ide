@@ -1,44 +1,100 @@
+#!/bin/sh
+
+# input args
+# \
+    go_version=$1
+    arch=$2
+# /
+
+# set the base path fo go installation
+# \
+    USERNAME=$(echo $(logname))
+    USER_HOME="/home/$USERNAME"
+    GOBASEPATH="/.golang"
+# /
+
 # you can take the preferred archive url. In this case has been used the go1.21.4.linux-amd64 version
-wget https://go.dev/dl/go1.21.4.linux-amd64.tar.gz
+# \
+    wget "https://go.dev/dl/${go_version}.${arch}.tar.gz"
+# /
+
+# remove old go version
+# \
+    rm -Rf "$GOBASEPATH/go/"
+# /
 
 # create directory and change directory
-mkdir -p "$HOME"/.golang && cd "$HOME"/.golang/
+# \
+    cd $USER_HOME
+    mkdir -p "$GOBASEPATH" && cd "$GOBASEPATH"
+# /
 
 # unpack directory
-tar -C . -xzf /home/tcatalano@LUISA.LOC/Scaricati/go1.21.4.linux-amd64.tar.gz
+# \
+    tar -C . -xzf "${go_version}.${arch}.tar.gz"
+# /
 
 # export the golang paths if they doesn't exists
-go_root=$(grep -rni "#go-root" $HOME/.bashrc)
-go_path=$(grep -rni "#go-path" $HOME/.bashrc)
-if [ -z "$go_root" ]; then
-    echo "export GOROOT=\"$HOME/.golang/go\" #go-root" >> $HOME/.bashrc
-else
-    echo "GOROOT var has been set before"
-fi;
+# \
+    go_root=$(grep -rni "#go-root" $USER_HOME/.bashrc)
+    go_path=$(grep -rni "#go-path" $USER_HOME/.bashrc)
+# /
 
-if [ -z "$go_path" ]; then
-    echo "export PATH=\"$PATH:$HOME/.golang/go/bin\" #go-path" >> $HOME/.bashrc
-else
-    echo "PATH with go/bin var has been set before"
-fi;
+# goroot
+# \
+    if [ -z "$go_root" ]; then
+        echo "export GOROOT=\"$USER_HOME$GOBASEPATH/go\" #go-root" >> $USER_HOME/.bashrc
+    else
+        echo "GOROOT var '$USER_HOME$GOBASEPATH/go' has been set before"
+    fi;
+    # gopath
+    if [ -z "$go_path" ]; then
+        echo "export GOPATH=\"$USER_HOME$GOBASEPATH/go/bin\" #go-path" >> $USER_HOME/.bashrc
+    else
+        echo "GOPATH var eq '$USER_HOME$GOBASEPATH/go/bin' has been set before"
+    fi;
+# /
+
+# export new PATH env var
+# \
+    runuser -l "$USERNAME" -c "export PATH=\"$PATH:$USER_HOME$GOBASEPATH/go/bin\""
+# /
 
 # reload current bash profile
-source $HOME/.bashrc
+# \
+    source $USER_HOME/.bashrc
+# /
 
-# check the golang command
-go envs
-if [ $? == 0 ] ; then
-  echo 'go is installed and configured'
-else
-  echo 'go is not configured'
-  # remove custom golang root path
-  rm -Rf $HOME/.golang/
-  # remove the go-path and go-root env variables from $HOME/.bashrc
-  sed '/#go-path/d' $HOME/.bashrc
-  sed '#go-root/d' $HOME/.bashrc
-  exit;
-fi
+# symlink for /usr/bin/go
+# \
+    ln -s $USER_HOME$GOBASEPATH/go/bin/go /usr/bin/go
+# /
 
-# flatpak configuration
-flatpak override --filesystem=$HOME/.golang
-flatpak override --env=GOROOT=$HOME/.golang/go
+# check the golang command.Useful to below guard
+# \
+    runuser -l "$USERNAME" -c "go env"
+# /
+
+# go env
+# \
+    if [ $? == 0 ] ; then
+      echo 'go is installed and configured'
+      runuser -l "$USERNAME" -c "go env -w GOCACHE=\"$USER_HOME/.cache/go-build\""
+      runuser -l "$USERNAME" -c "go env -w GOENV=\"$USER_HOME/.config/go/env\""
+      runuser -l "$USERNAME" -c "go env -w GOBIN=\"$GOROOT/bin\""
+    else
+      echo 'go is not configured'
+      # remove custom golang root path
+      rm -Rf "$GOBASEPATH"
+      # remove the go-path and go-root env variables from $HOME/.bashrc
+      sed '/#go-path/d' $USER_HOME/.bashrc
+      sed '#go-root/d' $USER_HOME/.bashrc
+      exit;
+    fi
+# /
+
+# flatpak configuration. Probably you can receive an error after run this command but is not
+# \
+    flatpak override --filesystem="$GOBASEPATH"
+    flatpak override --env=GOROOT="$GOBASEPATH/go"
+# /
