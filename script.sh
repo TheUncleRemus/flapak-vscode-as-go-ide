@@ -13,9 +13,12 @@
     GOBASEPATH="/.golang"
 # /
 
+cd $USER_HOME
+
 # you can take the preferred archive url. In this case has been used the go1.21.4.linux-amd64 version
 # \
     wget "https://go.dev/dl/${go_version}.${arch}.tar.gz"
+    chmod 777 "${go_version}.${arch}.tar.gz"
 # /
 
 # remove old go version
@@ -25,13 +28,12 @@
 
 # create directory and change directory
 # \
-    cd $USER_HOME
-    mkdir -p "$GOBASEPATH" && cd "$GOBASEPATH"
+    mkdir -p "$GOBASEPATH"
 # /
 
 # unpack directory
 # \
-    tar -C . -xzf "${go_version}.${arch}.tar.gz"
+    tar -C . -xzf "${go_version}.${arch}.tar.gz" && mv go "$GOBASEPATH"
 # /
 
 # export the golang paths if they doesn't exists
@@ -82,6 +84,10 @@
       runuser -l "$USERNAME" -c "go env -w GOCACHE=\"$USER_HOME/.cache/go-build\""
       runuser -l "$USERNAME" -c "go env -w GOENV=\"$USER_HOME/.config/go/env\""
       runuser -l "$USERNAME" -c "go env -w GOBIN=\"$GOROOT/bin\""
+      runuser -l "$USERNAME" -c "go env -w GOPROXY=\"direct\""
+      runuser -l "$USERNAME" -c "go env -w GO111MODULE=\"on\""
+      runuser -l "$USERNAME" -c "go env -w GOTOOLCHAIN=\"${go_version}\""
+      runuser -l "$USERNAME" -c "go env -w GOSUMDB=\"sum.golang.org\""
     else
       echo 'go is not configured'
       # remove custom golang root path
@@ -95,6 +101,11 @@
 
 # flatpak configuration. Probably you can receive an error after run this command but is not
 # \
-    flatpak override --filesystem="$GOBASEPATH"
-    flatpak override --env=GOROOT="$GOBASEPATH/go"
+    flatpak override --filesystem="$USER_HOME$GOBASEPATH"
+    flatpak override --env=GOROOT="$USER_HOME$GOBASEPATH/go"
+# /
+
+# set the to current logged user the ownership of gopath
+# \
+    chown -R "$USERNAME" "$USER_HOME$GOBASEPATH"
 # /
