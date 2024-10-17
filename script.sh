@@ -23,17 +23,17 @@ cd $USER_HOME
 
 # remove old go version
 # \
-    rm -Rf "$GOBASEPATH/go/"
+    rm -Rf "$USER_HOME$GOBASEPATH/go/"
 # /
 
 # create directory and change directory
 # \
-    mkdir -p "$GOBASEPATH"
+    mkdir -p "$USER_HOME$GOBASEPATH"
 # /
 
 # unpack directory
 # \
-    tar -C . -xzf "${go_version}.${arch}.tar.gz" && mv go "$GOBASEPATH"
+    tar -C . -xzf "${go_version}.${arch}.tar.gz" && mv go "$USER_HOME$GOBASEPATH"
 # /
 
 # export the golang paths if they doesn't exists
