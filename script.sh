@@ -16,7 +16,7 @@
 
 # you can take the preferred archive url. In this case has been used the go1.21.4.linux-amd64 version
 # \
-    mkdir -p "${GOBASEPATH}"
+    rm -Rr "${GOBASEPATH}" && mkdir -p "${GOBASEPATH}"
     wget -O "${WGET_PATH}/${go_version}.${arch}.tar.gz" "https://go.dev/dl/${go_version}.${arch}.tar.gz"
     chmod 777 "${WGET_PATH}/${go_version}.${arch}.tar.gz"
 # /
