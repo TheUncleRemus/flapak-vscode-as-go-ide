@@ -16,18 +16,14 @@
 
 # you can take the preferred archive url. In this case has been used the go1.21.4.linux-amd64 version
 # \
-    wget -O "${WGET_PATH}" "https://go.dev/dl/${go_version}.${arch}.tar.gz"
+    mkdir -p "${GOBASEPATH}"
+    wget -O "${WGET_PATH}/${go_version}.${arch}.tar.gz" "https://go.dev/dl/${go_version}.${arch}.tar.gz"
     chmod 777 "${WGET_PATH}/${go_version}.${arch}.tar.gz"
 # /
 
 # remove old go version
 # \
     rm -Rf "${GOBASEPATH}/go/"
-# /
-
-# create directory and change directory
-# \
-    mkdir -p "${GOBASEPATH}"
 # /
 
 # unpack directory
