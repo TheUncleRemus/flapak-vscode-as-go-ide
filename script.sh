@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # input args
 # \
@@ -16,8 +16,9 @@
 
 # you can take the preferred archive url. In this case has been used the go1.21.4.linux-amd64 version
 # \
-    rm -Rr "${GOBASEPATH}" && mkdir -p "${GOBASEPATH}"
-    wget "https://go.dev/dl/${go_version}.${arch}.tar.gz" -P "${WGET_PATH}" || true
+    rm -Rf "${GOBASEPATH}" && mkdir -p "${GOBASEPATH}"
+    ls -la "${USER_HOME}"
+    wget "https://go.dev/dl/${go_version}.${arch}.tar.gz" -P "${WGET_PATH}"
     chmod 777 "${WGET_PATH}/${go_version}.${arch}.tar.gz"
 # /
 
@@ -28,7 +29,7 @@
 
 # unpack directory
 # \
-    tar -C . -xzf "${WGET_PATH}/${go_version}.${arch}.tar.gz" && mv go "${GOBASEPATH}"
+    tar -C "${WGET_PATH}" -xzf "${WGET_PATH}/${go_version}.${arch}.tar.gz"
 # /
 
 # export the golang paths if they doesn't exists
@@ -78,7 +79,7 @@
       echo 'go is installed and configured'
       runuser -l "${USERNAME}" -c "go env -w GOCACHE=\"${USER_HOME}/.cache/go-build\""
       runuser -l "${USERNAME}" -c "go env -w GOENV=\"${USER_HOME}/.config/go/env\""
-      runuser -l "${USERNAME]" -c "go env -w GOBIN=\"${GOROOT}/bin\""
+      runuser -l "${USERNAME}" -c "go env -w GOBIN=\"${GOROOT}/bin\""
       runuser -l "${USERNAME}" -c "go env -w GOPROXY=\"direct\""
       runuser -l "${USERNAME}" -c "go env -w GO111MODULE=\"on\""
       runuser -l "${USERNAME}" -c "go env -w GOTOOLCHAIN=\"${go_version}\""
@@ -102,5 +103,5 @@
 
 # set the to current logged user the ownership of gopath
 # \
-    chown -R "${USERNAME} ${GOBASEPATH}"
+    chown -R "${USERNAME}" "${GOBASEPATH}"
 # /
