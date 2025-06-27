@@ -17,7 +17,7 @@
 # you can take the preferred archive url. In this case has been used the go1.21.4.linux-amd64 version
 # \
     wget -O "${WGET_PATH}" "https://go.dev/dl/${go_version}.${arch}.tar.gz"
-    chmod 777 "${go_version}.${arch}.tar.gz"
+    chmod 777 "${WGET_PATH}/${go_version}.${arch}.tar.gz"
 # /
 
 # remove old go version
@@ -44,21 +44,21 @@
 # goroot
 # \
     if [ -z "$go_root" ]; then
-        echo "export GOROOT=\"${USER_HOME$GOBASEPATH}/go\" #go-root" >> ${USER_HOME}/.bashrc
+        echo "export GOROOT=\"${USER_HOME}/${GOBASEPATH}/go\" #go-root" >> ${USER_HOME}/.bashrc
     else
-        echo "GOROOT var '${USER_HOME$GOBASEPATH}/go' has been set before"
+        echo "GOROOT var '${USER_HOME}/${GOBASEPATH}/go' has been set before"
     fi;
     # gopath
     if [ -z "$go_path" ]; then
-        echo "export GOPATH=\"${USER_HOME$GOBASEPATH}/go/bin\" #go-path" >> ${USER_HOME}/.bashrc
+        echo "export GOPATH=\"${USER_HOME}/${GOBASEPATH}/go/bin\" #go-path" >> ${USER_HOME}/.bashrc
     else
-        echo "GOPATH var eq '${USER_HOME$GOBASEPATH}/go/bin' has been set before"
+        echo "GOPATH var eq '${USER_HOME}/${GOBASEPATH}/go/bin' has been set before"
     fi;
 # /
 
 # export new PATH env var
 # \
-    runuser -l "${USERNAME}" -c "export PATH=\"${PATH}:${USER_HOME$GOBASEPATH}/go/bin\""
+    runuser -l "${USERNAME}" -c "export PATH=\"${PATH}:${USER_HOME}/${GOBASEPATH}/go/bin\""
 # /
 
 # reload current bash profile
@@ -68,7 +68,7 @@
 
 # symlink for /usr/bin/go
 # \
-    ln -s ${USER_HOME$GOBASEPATH}/go/bin/go /usr/bin/go
+    ln -s ${USER_HOME}/$GOBASEPATH}/go/bin/go /usr/bin/go
 # /
 
 # check the golang command.Useful to below guard
@@ -100,11 +100,11 @@
 
 # flatpak configuration. Probably you can receive an error after run this command but is not
 # \
-    flatpak override --filesystem="${USER_HOME$GOBASEPATH}"
-    flatpak override --env=GOROOT="${USER_HOME$GOBASEPATH}/go"
+    flatpak override --filesystem="${USER_HOME}/${GOBASEPATH}"
+    flatpak override --env=GOROOT="${USER_HOME}/${GOBASEPATH}/go"
 # /
 
 # set the to current logged user the ownership of gopath
 # \
-    chown -R "${USERNAME}" "${USER_HOME$GOBASEPATH}"
+    chown -R "${USERNAME}" "${USER_HOME}/${GOBASEPATH}"
 # /
